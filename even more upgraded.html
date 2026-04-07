@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JS Portal Search</title>
+</head>
+<body>
+<script>
+// --- Body styles ---
+document.body.style.margin = "0";
+document.body.style.padding = "0";
+document.body.style.overflow = "hidden";
+document.body.style.background = "black";
+document.body.style.fontFamily = "Arial, sans-serif";
+
+// --- Stars ---
+const starsContainer = document.createElement("div");
+document.body.appendChild(starsContainer);
+for(let i=0;i<200;i++){
+  const star = document.createElement("div");
+  star.style.position = "absolute";
+  star.style.width = Math.random()*3+1+"px";
+  star.style.height = star.style.width;
+  star.style.background = "white";
+  star.style.borderRadius = "50%";
+  star.style.top = Math.random()*window.innerHeight+"px";
+  star.style.left = Math.random()*window.innerWidth+"px";
+  star.style.opacity = 0.8;
+  star.style.animation = `twinkle ${2 + Math.random()*2}s infinite alternate`;
+  starsContainer.appendChild(star);
+}
+
+// --- Animations ---
+const style = document.createElement('style');
+style.innerHTML = `
+@keyframes twinkle {0% {opacity:0.2;} 100% {opacity:1;}}
+@keyframes pulse {0% {transform: scale(1);} 50% {transform: scale(1.1);} 100% {transform: scale(1);}}
+@keyframes portalZoom {
+  0% {transform: scale(1);}
+  100% {transform: scale(10);}
+}
+`;
+document.head.appendChild(style);
+
+// --- Portal ---
+const portal = document.createElement("div");
+portal.style.position="absolute";
+portal.style.top="50%";
+portal.style.left="50%";
+portal.style.width="200px";
+portal.style.height="200px";
+portal.style.marginLeft="-100px";
+portal.style.marginTop="-100px";
+portal.style.borderRadius="50%";
+portal.style.background="radial-gradient(circle,#00f,#000)";
+portal.style.boxShadow="0 0 50px #00f,0 0 100px #00f,0 0 150px #0ff";
+portal.style.animation="pulse 2s infinite";
+document.body.appendChild(portal);
+
+// --- Search bar ---
+const searchContainer=document.createElement("div");
+searchContainer.style.position="absolute";
+searchContainer.style.top="10%";
+searchContainer.style.left="50%";
+searchContainer.style.transform="translateX(-50%)";
+searchContainer.style.textAlign="center";
+searchContainer.style.zIndex="2";
+document.body.appendChild(searchContainer);
+
+const searchInput=document.createElement("input");
+searchInput.type="text";
+searchInput.placeholder="Search the web...";
+searchInput.style.padding="10px";
+searchInput.style.width="300px";
+searchInput.style.borderRadius="10px";
+searchInput.style.border="none";
+searchInput.style.outline="none";
+searchInput.style.fontSize="1em";
+searchContainer.appendChild(searchInput);
+
+const searchButton=document.createElement("button");
+searchButton.innerText="Search";
+searchButton.style.padding="10px 20px";
+searchButton.style.borderRadius="10px";
+searchButton.style.border="none";
+searchButton.style.background="#0ff";
+searchButton.style.color="black";
+searchButton.style.fontWeight="bold";
+searchButton.style.cursor="pointer";
+searchButton.style.marginLeft="5px";
+searchContainer.appendChild(searchButton);
+
+// --- Sound effect ---
+const sound = new Audio("https://www.soundjay.com/button/beep-07.wav");
+
+// --- Search function ---
+function doSearch(){
+  const query = searchInput.value;
+  if(query){
+
+    // play sound
+    sound.play();
+
+    // animate portal
+    portal.style.animation = "portalZoom 0.8s forwards";
+
+    // delay before opening
+    setTimeout(()=>{
+      window.open(
+        "https://www.google.com/search?q=" + encodeURIComponent(query),
+        "_blank"
+      );
+      portal.style.animation = "pulse 2s infinite"; // reset
+    }, 800);
+  }
+}
+
+// click search
+searchButton.onclick = doSearch;
+
+// ENTER key search
+searchInput.addEventListener("keydown", function(e){
+  if(e.key === "Enter"){
+    doSearch();
+  }
+});
+</script>
+</body>
+</html>
